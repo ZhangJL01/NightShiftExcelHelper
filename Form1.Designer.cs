@@ -64,7 +64,7 @@
             // 
             // portalBtn
             // 
-            this.portalBtn.Location = new System.Drawing.Point(75, 214);
+            this.portalBtn.Location = new System.Drawing.Point(75, 187);
             this.portalBtn.Name = "portalBtn";
             this.portalBtn.Size = new System.Drawing.Size(75, 23);
             this.portalBtn.TabIndex = 2;
@@ -83,7 +83,7 @@
             // 
             // portalTxt
             // 
-            this.portalTxt.Location = new System.Drawing.Point(184, 216);
+            this.portalTxt.Location = new System.Drawing.Point(184, 181);
             this.portalTxt.Name = "portalTxt";
             this.portalTxt.Size = new System.Drawing.Size(509, 21);
             this.portalTxt.TabIndex = 4;
@@ -99,9 +99,10 @@
             // 
             // checkBtn
             // 
-            this.checkBtn.Location = new System.Drawing.Point(263, 342);
+            this.checkBtn.Font = new System.Drawing.Font("楷体", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.checkBtn.Location = new System.Drawing.Point(100, 263);
             this.checkBtn.Name = "checkBtn";
-            this.checkBtn.Size = new System.Drawing.Size(289, 23);
+            this.checkBtn.Size = new System.Drawing.Size(300, 30);
             this.checkBtn.TabIndex = 6;
             this.checkBtn.Text = "登录";
             this.checkBtn.UseVisualStyleBackColor = true;
@@ -109,12 +110,16 @@
             // 
             // msg
             // 
-            this.msg.AutoSize = true;
-            this.msg.Location = new System.Drawing.Point(380, 310);
+            this.msg.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.msg.Font = new System.Drawing.Font("华文楷体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.msg.Location = new System.Drawing.Point(0, 117);
             this.msg.Name = "msg";
-            this.msg.Size = new System.Drawing.Size(65, 12);
+            this.msg.Size = new System.Drawing.Size(495, 50);
             this.msg.TabIndex = 7;
             this.msg.Text = "检查完毕！";
+            this.msg.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.msg.Visible = false;
             // 
             // portalCanBtn
@@ -163,24 +168,25 @@
             // 
             // code
             // 
-            this.code.Location = new System.Drawing.Point(184, 64);
+            this.code.Location = new System.Drawing.Point(20, 20);
             this.code.Name = "code";
-            this.code.Size = new System.Drawing.Size(476, 146);
+            this.code.Size = new System.Drawing.Size(450, 150);
             this.code.TabIndex = 12;
             this.code.TabStop = false;
             // 
             // codeTxt
             // 
-            this.codeTxt.Location = new System.Drawing.Point(364, 243);
+            this.codeTxt.Location = new System.Drawing.Point(200, 208);
             this.codeTxt.Name = "codeTxt";
             this.codeTxt.Size = new System.Drawing.Size(100, 21);
             this.codeTxt.TabIndex = 13;
+            this.codeTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // NightShiftExcel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(489, 323);
             this.Controls.Add(this.codeTxt);
             this.Controls.Add(this.code);
             this.Controls.Add(this.button1);
