@@ -177,7 +177,7 @@ namespace NightShiftExcelHelper {
             myResponse.Close();
         }
 
-        public static void GetRAList(string key) {
+        public static void GetRAList() {
             HttpWebRequest myRequest = WebRequest.CreateHttp(raUrl);
             myRequest.Method = "POST";
             myRequest.ContentType = "application/json";
@@ -187,9 +187,7 @@ namespace NightShiftExcelHelper {
 
             #region 添加Post 参数
             RequestData.RAData raData = new RequestData.RAData();
-            raData.keyword = key;
             string s = JsonConvert.SerializeObject(raData);
-            byte[] data = Encoding.Default.GetBytes(s);
             //myRequest.ContentLength = data.Length;
             myRequest.SendChunked = true;
             using (var reqStream = new StreamWriter(myRequest.GetRequestStream())) {
@@ -206,22 +204,22 @@ namespace NightShiftExcelHelper {
             //string returnXml = HttpUtility.UrlDecode(reader.ReadToEnd());//如果有编码问题就用这个方法
             string returnStr = reader.ReadToEnd();//利用StreamReader就可以从响应内容从头读到尾
             reader.Close();
-            switch(key) {
-                case "内网":
-                    inNetList = JsonConvert.DeserializeObject<ResponseData.RAData>(returnStr).data.list;
-                    break;
-                case "外网":
-                    exNetList = JsonConvert.DeserializeObject<ResponseData.RAData>(returnStr).data.list;
-                    break;
-                case "工控网":
-                    icNetList = JsonConvert.DeserializeObject<ResponseData.RAData>(returnStr).data.list;
-                    break;
-                case "其他":
-                    otherNetList = JsonConvert.DeserializeObject<ResponseData.RAData>(returnStr).data.list;
-                    break;
-                default :
-                    break;
-            }
+
+            List<ResponseData.RAData.RAInfo> raList = 
+                JsonConvert.DeserializeObject<ResponseData.RAData>(returnStr).data.list;
+
+            foreach(ResponseData.RAData.RAInfo ra in raList) {
+                if (ra.assetName.Contains("内网")) {
+                    inNetList.Add(ra);
+                } else if (ra.assetName.Contains("外网")) {
+                    exNetList.Add(ra);
+                } else if (ra.assetName.Contains("工控网")){
+                    icNetList.Add(ra);
+                } else {
+                    otherNetList.Add(ra);
+                }
+                
+            }  
 
             myResponse.Close();
         }

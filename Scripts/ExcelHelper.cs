@@ -109,28 +109,28 @@ namespace NightShiftExcelHelper {
             //填写风险资产外网
             foreach (ResponseData.RAData.RAInfo raInfo in NetHelper.exNetList) {
 
-                worksheet.Cells[7, 5].Value += raInfo.tags + ":" + raInfo.ip + "\n";
+                worksheet.Cells[7, 5].Value += raInfo.tags + ":" + raInfo.assetName + "\n";
 
             }
 
             //填写风险资产内网
             foreach (ResponseData.RAData.RAInfo raInfo in NetHelper.inNetList) {
 
-                worksheet.Cells[8, 5].Value += raInfo.tags + ":" + raInfo.ip + "\n";
+                worksheet.Cells[8, 5].Value += raInfo.tags + ":" + raInfo.assetName + "\n";
 
             }
 
             //填写风险资产工控网
             foreach (ResponseData.RAData.RAInfo raInfo in NetHelper.icNetList) {
 
-                worksheet.Cells[7, 5].Value += raInfo.tags + ":" + raInfo.ip + "\n";
+                worksheet.Cells[7, 5].Value += raInfo.tags + ":" + raInfo.assetName + "\n";
 
             }
 
             //填写风险资产其他
             foreach (ResponseData.RAData.RAInfo raInfo in NetHelper.otherNetList) {
 
-                worksheet.Cells[7, 5].Value += raInfo.tags + ":" + raInfo.ip + "\n";
+                worksheet.Cells[7, 5].Value += raInfo.tags + ":" + raInfo.assetName + "\n";
 
             }
 

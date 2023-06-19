@@ -95,75 +95,63 @@ namespace NightShiftExcelHelper {
             msg.Text = "认证中";
             msg.Refresh();
             NetHelper.Authentication();
-            Thread.Sleep(3000);
+            //Thread.Sleep(3000);
             msg.Text = "弱口令信息统计中：RZOA";
             msg.Refresh();
             NetHelper.GetWPList("10.200.24.11");
-            Thread.Sleep(3000);
+            //Thread.Sleep(3000);
             msg.Text = "弱口令信息统计中：ERP";
             msg.Refresh();
             NetHelper.GetWPList("10.200.35.56");
-            Thread.Sleep(3000);
+            //Thread.Sleep(3000);
 
             msg.Text = "安全事件统计中：高危";
             msg.Refresh();
             NetHelper.GetSIList("High");
-            Thread.Sleep(3000);
+            //Thread.Sleep(3000);
             msg.Text = "安全事件统计中：中危";
             msg.Refresh();
             NetHelper.GetSIList("Medium");
-            Thread.Sleep(3000);
+            //Thread.Sleep(3000);
             msg.Text = "安全事件统计中：低危";
             msg.Refresh();
             NetHelper.GetSIList("Low");
-            Thread.Sleep(3000);
+            //Thread.Sleep(3000);
 
-            msg.Text = "风险资产统计中：内网";
+            msg.Text = "风险资产统计中：已失陷";
             msg.Refresh();
-            NetHelper.GetRAList("内网");
-            Thread.Sleep(3000);
-            msg.Text = "风险资产统计中：外网";
-            msg.Refresh();
-            NetHelper.GetRAList("外网");
-            Thread.Sleep(3000);
-            msg.Text = "风险资产统计中：工控网";
-            msg.Refresh();
-            NetHelper.GetRAList("工控网");
-            Thread.Sleep(3000);
-            msg.Text = "风险资产统计中：其他";
-            msg.Refresh();
-            NetHelper.GetRAList("其他");
-            Thread.Sleep(3000);
+            NetHelper.GetRAList();
+            //Thread.Sleep(3000);
 
             msg.Text = "弱口令信息测试中：RZOA";
             msg.Refresh();
             NetHelper.RzoaRequset();
-            Thread.Sleep(3000);
+            //Thread.Sleep(3000);
             msg.Text = "弱口令信息测试中：ERP";
             msg.Refresh();
             NetHelper.ErpRequset();
-            Thread.Sleep(3000);
+            //Thread.Sleep(3000);
 
             //NetHelper.Test();
-            ///Thread.Sleep(3000);
+            //Thread.Sleep(3000);
             msg.Text = "信息安全相关网站测试中";
             msg.Refresh();
             msg.Text = "生成ERP弱口令表格";
             msg.Refresh();
-            //ExcelHelper.FillWPSheet(false);
-            Thread.Sleep(3000);
+            ExcelHelper.FillWPSheet(false);
+            //Thread.Sleep(3000);
             msg.Text = "生成RZOA弱口令表格";
             msg.Refresh();
-            //ExcelHelper.FillWPSheet(true);
-            Thread.Sleep(3000);
+            ExcelHelper.FillWPSheet(true);
+            //Thread.Sleep(3000);
             msg.Text = "生成信息安全表格";
             msg.Refresh();
-            //ExcelHelper.FillNSSheet();
-            Thread.Sleep(3000);
+            ExcelHelper.FillNSSheet();
+            //Thread.Sleep(3000);
 
             msg.Text = "完成！\n又是偷懒成功的一天呢";
             Thread.Sleep(3000);
-            //Application.Exit();
+            Application.Exit();
         }
 
         private void rzoaCanBtn_Click(object sender, EventArgs e) {

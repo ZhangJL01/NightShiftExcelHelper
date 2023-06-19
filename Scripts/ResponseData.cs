@@ -44,7 +44,7 @@ namespace NightShiftExcelHelper {
             }
 
             public class RAInfo {
-                public string ip;
+                public string assetName;
                 public string tags;
             }
         }
