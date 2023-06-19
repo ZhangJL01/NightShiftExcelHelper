@@ -23,6 +23,7 @@
         /// 使用代码编辑器修改此方法的内容。
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NightShiftExcel));
             this.rzoaBtn = new System.Windows.Forms.Button();
             this.erpBtn = new System.Windows.Forms.Button();
             this.portalBtn = new System.Windows.Forms.Button();
@@ -201,6 +202,7 @@
             this.Controls.Add(this.portalBtn);
             this.Controls.Add(this.erpBtn);
             this.Controls.Add(this.rzoaBtn);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "NightShiftExcel";
             this.Text = "Shit";
             ((System.ComponentModel.ISupportInitialize)(this.code)).EndInit();
