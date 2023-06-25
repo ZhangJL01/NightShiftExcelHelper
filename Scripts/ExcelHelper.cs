@@ -57,6 +57,7 @@ namespace NightShiftExcelHelper {
         }
 
         public static void FillNSSheet() {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             FileInfo newFile = new FileInfo(desktop + "/信息安全网络安全监控报表_" + time + ".xlsx");
 
@@ -72,7 +73,10 @@ namespace NightShiftExcelHelper {
             worksheet.Cells[8, 4].Value = NetHelper.inNetList.Count;
             worksheet.Cells[9, 4].Value = NetHelper.icNetList.Count;
             worksheet.Cells[10, 4].Value = NetHelper.otherNetList.Count;
-            
+
+            worksheet.Cells[1, 1].Value +=
+                DateTime.Now.Month + "月" + (DateTime.Now.Day - 1) + "日-" 
+                + DateTime.Now.Month + "月" + DateTime.Now.Day + "日)";
             //填写高危事件
             foreach (ResponseData.SIData.SIInfo siInfo in NetHelper.highSIList) {
 

@@ -25,6 +25,7 @@ namespace NightShiftExcelHelper {
             Image mImage = Image.FromStream(memStream);
             code.SizeMode = PictureBoxSizeMode.CenterImage;
             code.Image = mImage;
+            button1_Click(this, null);
         }
 
         private void rzoaBtn_Click(object sender, EventArgs e) {
@@ -125,11 +126,11 @@ namespace NightShiftExcelHelper {
 
             msg.Text = "弱口令信息测试中：RZOA";
             msg.Refresh();
-            NetHelper.RzoaRequset();
+            //NetHelper.RzoaRequset();
             //Thread.Sleep(3000);
             msg.Text = "弱口令信息测试中：ERP";
             msg.Refresh();
-            NetHelper.ErpRequset();
+            //NetHelper.ErpRequset();
             //Thread.Sleep(3000);
 
             //NetHelper.Test();
@@ -138,11 +139,11 @@ namespace NightShiftExcelHelper {
             msg.Refresh();
             msg.Text = "生成ERP弱口令表格";
             msg.Refresh();
-            ExcelHelper.FillWPSheet(false);
+            //ExcelHelper.FillWPSheet(false);
             //Thread.Sleep(3000);
             msg.Text = "生成RZOA弱口令表格";
             msg.Refresh();
-            ExcelHelper.FillWPSheet(true);
+            //ExcelHelper.FillWPSheet(true);
             //Thread.Sleep(3000);
             msg.Text = "生成信息安全表格";
             msg.Refresh();
@@ -178,7 +179,9 @@ namespace NightShiftExcelHelper {
         private void button1_Click(object sender, EventArgs e) {
             //msg.Text = NetHelper.RzoaRequset("liuyq", "psss").ToString();
             //msg.Text = NetHelper.ErpRequset("003308", "199961").ToString();
-            ExcelHelper.Test();
+            //ExcelHelper.Test();
+            //ExcelHelper.FillNSSheet();
+            ExcelHelper.FillWPSheet(true);
         }
     }
 }
