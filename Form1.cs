@@ -25,7 +25,7 @@ namespace NightShiftExcelHelper {
             Image mImage = Image.FromStream(memStream);
             code.SizeMode = PictureBoxSizeMode.CenterImage;
             code.Image = mImage;
-            button1_Click(this, null);
+            //button1_Click(this, null);
         }
 
         private void rzoaBtn_Click(object sender, EventArgs e) {
