@@ -9,14 +9,14 @@ namespace NightShiftExcelHelper {
     class ExcelHelper {
 
         //模板路径
-        private static string rzoaSheet = "./RZOA告警列表.xlsx";
-        private static string erpSheet = "./ERP告警列表.xlsx";
-        private static string nsSheet = "./信息安全网络安全监控报表.xlsx";
+        private static readonly string rzoaSheet = "./RZOA告警列表.xlsx";
+        private static readonly string erpSheet = "./ERP告警列表.xlsx";
+        private static readonly string nsSheet = "./信息安全网络安全监控报表.xlsx";
 
         public static Dictionary<String, String> excelDic = new Dictionary<string, string>();
 
         public static string time = String.Format("{0:'_'yyyyMMdd}", DateTime.Now);
-        private static string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        private static readonly string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         public static void FillWPSheet(bool isOA) {
 
             string filePath;
@@ -54,6 +54,7 @@ namespace NightShiftExcelHelper {
             }
 
             package.SaveAs(newFile);
+            package.Dispose();
         }
 
         public static void FillNSSheet() {
@@ -139,12 +140,13 @@ namespace NightShiftExcelHelper {
             }
 
             package.SaveAs(newFile);
+            package.Dispose();
         }
 
-        public static void Test() {
-            FileInfo existingFile = new FileInfo(rzoaSheet);
-            Console.WriteLine(Application.StartupPath);
-        }
+        //public static void Test() {
+        //    FileInfo existingFile = new FileInfo(rzoaSheet);
+        //    Console.WriteLine(Application.StartupPath);
+        //}
         public static void Check() {
             try {
                 foreach (String key in excelDic.Keys) {
@@ -168,6 +170,7 @@ namespace NightShiftExcelHelper {
                         }
                     }
                     package.Save();
+                    package.Dispose();
                 }
             }
             catch (Exception e) {

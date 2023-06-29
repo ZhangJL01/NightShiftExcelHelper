@@ -13,30 +13,31 @@ using System.Web;
 namespace NightShiftExcelHelper {
     class NetHelper {
 
-        private static string mainUrl = "https://10.200.6.170/";
-        private static string codeUrl = "https://10.200.6.170/api/v1.0/verify/code";
-        private static string loginUrl = "https://10.200.6.170/api/v1.0/login";
-        private static string authorUrl =
+        private static readonly string mainUrl = "https://10.200.6.170/";
+        private static readonly string codeUrl = "https://10.200.6.170/api/v1.0/verify/code";
+        private static readonly string loginUrl = "https://10.200.6.170/api/v1.0/login";
+        private static readonly string authorUrl =
             "https://10.200.6.170/api/authentication/forPassword?otherPassword=ceb7b0f380c0eb555cda5d2138c26406b40f5bd9&password=f657d529d415914514f4d40a5f788ade97b1f134e4e093baedc55da81ca3b119&cascadeOrgId=fe22d914-4ad0-11ed-96f9-024248760126_1665649699&connectType=ALL";
-        private static string wpUrl =
+        private static readonly string wpUrl =
             "https://10.200.6.170/api/retrieve/alarms/getDataList?cascadeOrgId=fe22d914-4ad0-11ed-96f9-024248760126_1665649699&connectType=ALL";
-        private static string raUrl =
+        private static readonly string raUrl =
             "https://10.200.6.170/api/alarmCenter/listRiskyAssets?cascadeOrgId=fe22d914-4ad0-11ed-96f9-024248760126_1665649699&connectType=ALL";
-        private static string siUrl =
+        private static readonly string siUrl =
             "https://10.200.6.170/api/security/incident/fuzzyQuery?keyword=&startTime={0}&endTime={1}&offset=0&limit=50&threatSeverity={2}&statuses=unprocessed&cascadeOrgId=fe22d914-4ad0-11ed-96f9-024248760126_1665649699&connectType=ALL";
 
-        private static string erpUrl = "http://erpapp.sdgtrz.com:8088/OA_HTML/AppsLocalLogin.jsp";
-        private static string rzoaUrl = "http://rzoa.sdgt.com/names.nsf?Login";
+        private static readonly string erpUrl = "http://erpapp.sdgtrz.com:8088/OA_HTML/AppsLocalLogin.jsp";
+        private static readonly string rzoaUrl = "http://rzoa.sdgt.com/names.nsf?Login";
 
         private static Cookie cookie = new Cookie();
 
         public static List<ResponseData.WPData.WPInfo> rzoaList;
         public static List<ResponseData.WPData.WPInfo> erpList;
 
-        public static List<ResponseData.RAData.RAInfo> inNetList;
-        public static List<ResponseData.RAData.RAInfo> exNetList;
-        public static List<ResponseData.RAData.RAInfo> icNetList;
-        public static List<ResponseData.RAData.RAInfo> otherNetList;
+        //无法直接Json反序列化，需初始化
+        public static List<ResponseData.RAData.RAInfo> inNetList = new List<ResponseData.RAData.RAInfo>();
+        public static List<ResponseData.RAData.RAInfo> exNetList = new List<ResponseData.RAData.RAInfo>();
+        public static List<ResponseData.RAData.RAInfo> icNetList = new List<ResponseData.RAData.RAInfo>();
+        public static List<ResponseData.RAData.RAInfo> otherNetList = new List<ResponseData.RAData.RAInfo>();
 
         public static List<ResponseData.SIData.SIInfo> highSIList;
         public static List<ResponseData.SIData.SIInfo> mediumSIList;
@@ -99,7 +100,7 @@ namespace NightShiftExcelHelper {
             RequestData.LoginData loginData = new RequestData.LoginData();
             loginData.typeData.code = code;
             string s = JsonConvert.SerializeObject(loginData);
-            byte[] data = Encoding.Default.GetBytes(s);
+            //byte[] data = Encoding.Default.GetBytes(s);
             myRequest.ContentLength = s.Length;
             using (var reqStream = new StreamWriter(myRequest.GetRequestStream())) {
                 reqStream.Write(s);
@@ -111,10 +112,10 @@ namespace NightShiftExcelHelper {
             //HttpContext.Current.Request.Cookies.Add(cookie);
             //myRequest.CookieContainer.
             //通过响应内容流创建StreamReader对象，因为StreamReader更高级更快
-            StreamReader reader = new StreamReader(myResponse.GetResponseStream(), Encoding.UTF8);
-            //string returnXml = HttpUtility.UrlDecode(reader.ReadToEnd());//如果有编码问题就用这个方法
-            string returnStr = reader.ReadToEnd();//利用StreamReader就可以从响应内容从头读到尾
-            reader.Close();
+            //StreamReader reader = new StreamReader(myResponse.GetResponseStream(), Encoding.UTF8);
+            ////string returnXml = HttpUtility.UrlDecode(reader.ReadToEnd());//如果有编码问题就用这个方法
+            //string returnStr = reader.ReadToEnd();//利用StreamReader就可以从响应内容从头读到尾
+            //reader.Close();
 
             string strCookie = String.Copy(myResponse.Headers["Set-Cookie"]);
             StrToCookie(strCookie);
@@ -148,10 +149,8 @@ namespace NightShiftExcelHelper {
             RequestData.WPData wpData = new RequestData.WPData();
             wpData.condition.query.b.filter.term.destAddress = destAdd;
             wpData.queryStr += " \"" + destAdd + "\" ";
-            wpData.startTime = String.Format("{0:yyyy'-'MM'-'dd' 'HH':'00':'00}", DateTime.Now.AddDays(-1));
-            wpData.endTime = String.Format("{0:yyyy'-'MM'-'dd' 'HH':'mm':'ss}", DateTime.Now);
             string s = JsonConvert.SerializeObject(wpData);
-            byte[] data = Encoding.Default.GetBytes(s);
+            //byte[] data = Encoding.Default.GetBytes(s);
             //myRequest.ContentLength = data.Length;
             myRequest.SendChunked = true;
             using (var reqStream = new StreamWriter(myRequest.GetRequestStream())) {
@@ -180,14 +179,17 @@ namespace NightShiftExcelHelper {
         public static void GetRAList() {
             HttpWebRequest myRequest = WebRequest.CreateHttp(raUrl);
             myRequest.Method = "POST";
-            myRequest.ContentType = "application/json";
+            myRequest.ContentType = "application/x-www-form-urlencoded";
             myRequest.Referer = mainUrl;
             myRequest.CookieContainer = new CookieContainer();
             myRequest.CookieContainer.Add(cookie);
 
+
+            
             #region 添加Post 参数
-            RequestData.RAData raData = new RequestData.RAData();
-            string s = JsonConvert.SerializeObject(raData);
+            //RequestData.RAData raData = new RequestData.RAData();
+            string s = "offset=0&limit=10&riskyType=fallen&orgId=&keyword=&date=" +
+                String.Format("{0:yyyy'-'MM'-'dd}", DateTime.Now.AddDays(-1));
             //myRequest.ContentLength = data.Length;
             myRequest.SendChunked = true;
             using (var reqStream = new StreamWriter(myRequest.GetRequestStream())) {
@@ -209,9 +211,9 @@ namespace NightShiftExcelHelper {
                 JsonConvert.DeserializeObject<ResponseData.RAData>(returnStr).data.list;
 
             foreach(ResponseData.RAData.RAInfo ra in raList) {
-                if (ra.assetName.Contains("内网")) {
+                if (ra.assetName.Contains("办公内网")) {
                     inNetList.Add(ra);
-                } else if (ra.assetName.Contains("外网")) {
+                } else if (ra.assetName.Contains("办公外网")) {
                     exNetList.Add(ra);
                 } else if (ra.assetName.Contains("工控网")){
                     icNetList.Add(ra);

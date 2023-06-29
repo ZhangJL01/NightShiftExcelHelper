@@ -28,21 +28,21 @@ namespace NightShiftExcelHelper {
             //button1_Click(this, null);
         }
 
-        private void rzoaBtn_Click(object sender, EventArgs e) {
+        private void RzoaBtn_Click(object sender, EventArgs e) {
             FileChoose("rzoa");
             if (ExcelHelper.excelDic.ContainsKey("rzoa")) {
                 rzoaTxt.Text = ExcelHelper.excelDic["rzoa"];
             }
         }
 
-        private void erpBtn_Click(object sender, EventArgs e) {
+        private void ErpBtn_Click(object sender, EventArgs e) {
             FileChoose("erp");
             if (ExcelHelper.excelDic.ContainsKey("erp")) {
                 erpTxt.Text = ExcelHelper.excelDic["erp"];
             }
         }
 
-        private void portalBtn_Click(object sender, EventArgs e) {
+        private void PortalBtn_Click(object sender, EventArgs e) {
             FileChoose("portal");
             if (ExcelHelper.excelDic.ContainsKey("portal")) {
                 portalTxt.Text = ExcelHelper.excelDic["portal"];
@@ -50,12 +50,13 @@ namespace NightShiftExcelHelper {
         }
 
         private void FileChoose(String key) {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = true;      //该值确定是否可以选择多个文件
-            openFileDialog.Title = "请选择文件";     //弹窗的标题
-            //openFileDialog.InitialDirectory = "D:\\";       //默认打开的文件夹的位置
-            openFileDialog.Filter = "MicroSoft Excel文件(*.xlsx)|*.xlsx|所有文件(*.*)|*.*";       //筛选文件
-            openFileDialog.ShowHelp = true;     //是否显示“帮助”按钮
+            OpenFileDialog openFileDialog = new OpenFileDialog {
+                Multiselect = true,      //该值确定是否可以选择多个文件
+                Title = "请选择文件",     //弹窗的标题
+                                     //openFileDialog.InitialDirectory = "D:\\";       //默认打开的文件夹的位置
+                Filter = "MicroSoft Excel文件(*.xlsx)|*.xlsx|所有文件(*.*)|*.*",       //筛选文件
+                ShowHelp = true     //是否显示“帮助”按钮
+            };
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
             if (openFileDialog.ShowDialog() == DialogResult.OK) {
                 if (ExcelHelper.excelDic.ContainsKey(key)) {
@@ -64,9 +65,10 @@ namespace NightShiftExcelHelper {
                     ExcelHelper.excelDic.Add(key, openFileDialog.FileName);
                 }
             }
+            openFileDialog.Dispose();
         }
 
-        private void checkBtn_Click(object sender, EventArgs e) {
+        private void CheckBtn_Click(object sender, EventArgs e) {
             //msg.Text = "";
             //try {
             //    ExcelHelper.Check();
@@ -143,7 +145,7 @@ namespace NightShiftExcelHelper {
             //Thread.Sleep(3000);
             msg.Text = "生成RZOA弱口令表格";
             msg.Refresh();
-            //ExcelHelper.FillWPSheet(true);
+            ExcelHelper.FillWPSheet(true);
             //Thread.Sleep(3000);
             msg.Text = "生成信息安全表格";
             msg.Refresh();
@@ -151,37 +153,37 @@ namespace NightShiftExcelHelper {
             //Thread.Sleep(3000);
 
             msg.Text = "完成！\n又是偷懒成功的一天呢";
-            Thread.Sleep(3000);
+            Thread.Sleep(10000);
             Application.Exit();
         }
 
-        private void rzoaCanBtn_Click(object sender, EventArgs e) {
+        private void RzoaCanBtn_Click(object sender, EventArgs e) {
             if (ExcelHelper.excelDic.ContainsKey("rzoa")) {
                 ExcelHelper.excelDic.Remove("rzoa");
                 rzoaTxt.Text = "";
             }
         }
 
-        private void erpCanBtn_Click(object sender, EventArgs e) {
+        private void ErpCanBtn_Click(object sender, EventArgs e) {
             if (ExcelHelper.excelDic.ContainsKey("erp")) {
                 ExcelHelper.excelDic.Remove("erp");
                 erpTxt.Text = "";
             }
         }
 
-        private void portalCanBtn_Click(object sender, EventArgs e) {
+        private void PortalCanBtn_Click(object sender, EventArgs e) {
             if (ExcelHelper.excelDic.ContainsKey("portal")) {
                 ExcelHelper.excelDic.Remove("portal");
                 portalTxt.Text = "";
             }
         }
 
-        private void button1_Click(object sender, EventArgs e) {
+        private void Button1_Click(object sender, EventArgs e) {
             //msg.Text = NetHelper.RzoaRequset("liuyq", "psss").ToString();
             //msg.Text = NetHelper.ErpRequset("003308", "199961").ToString();
             //ExcelHelper.Test();
-            //ExcelHelper.FillNSSheet();
-            ExcelHelper.FillWPSheet(true);
+            ExcelHelper.FillNSSheet();
+            //ExcelHelper.FillWPSheet(true);
         }
     }
 }

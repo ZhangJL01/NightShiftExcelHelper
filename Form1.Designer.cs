@@ -50,7 +50,7 @@
             this.rzoaBtn.Text = "RZOA";
             this.rzoaBtn.UseVisualStyleBackColor = true;
             this.rzoaBtn.Visible = false;
-            this.rzoaBtn.Click += new System.EventHandler(this.rzoaBtn_Click);
+            this.rzoaBtn.Click += new System.EventHandler(this.RzoaBtn_Click);
             // 
             // erpBtn
             // 
@@ -61,7 +61,7 @@
             this.erpBtn.Text = "ERP";
             this.erpBtn.UseVisualStyleBackColor = true;
             this.erpBtn.Visible = false;
-            this.erpBtn.Click += new System.EventHandler(this.erpBtn_Click);
+            this.erpBtn.Click += new System.EventHandler(this.ErpBtn_Click);
             // 
             // portalBtn
             // 
@@ -72,7 +72,7 @@
             this.portalBtn.Text = "门户";
             this.portalBtn.UseVisualStyleBackColor = true;
             this.portalBtn.Visible = false;
-            this.portalBtn.Click += new System.EventHandler(this.portalBtn_Click);
+            this.portalBtn.Click += new System.EventHandler(this.PortalBtn_Click);
             // 
             // rzoaTxt
             // 
@@ -107,7 +107,7 @@
             this.checkBtn.TabIndex = 6;
             this.checkBtn.Text = "登录";
             this.checkBtn.UseVisualStyleBackColor = true;
-            this.checkBtn.Click += new System.EventHandler(this.checkBtn_Click);
+            this.checkBtn.Click += new System.EventHandler(this.CheckBtn_Click);
             // 
             // msg
             // 
@@ -132,7 +132,7 @@
             this.portalCanBtn.Text = "清空";
             this.portalCanBtn.UseVisualStyleBackColor = true;
             this.portalCanBtn.Visible = false;
-            this.portalCanBtn.Click += new System.EventHandler(this.portalCanBtn_Click);
+            this.portalCanBtn.Click += new System.EventHandler(this.PortalCanBtn_Click);
             // 
             // erpCanBtn
             // 
@@ -143,7 +143,7 @@
             this.erpCanBtn.Text = "清空";
             this.erpCanBtn.UseVisualStyleBackColor = true;
             this.erpCanBtn.Visible = false;
-            this.erpCanBtn.Click += new System.EventHandler(this.erpCanBtn_Click);
+            this.erpCanBtn.Click += new System.EventHandler(this.ErpCanBtn_Click);
             // 
             // rzoaCanBtn
             // 
@@ -154,7 +154,7 @@
             this.rzoaCanBtn.Text = "清空";
             this.rzoaCanBtn.UseVisualStyleBackColor = true;
             this.rzoaCanBtn.Visible = false;
-            this.rzoaCanBtn.Click += new System.EventHandler(this.rzoaCanBtn_Click);
+            this.rzoaCanBtn.Click += new System.EventHandler(this.RzoaCanBtn_Click);
             // 
             // button1
             // 
@@ -165,7 +165,7 @@
             this.button1.Text = "别瞎点！！！别手贱！！！";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Visible = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // code
             // 

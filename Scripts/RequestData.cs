@@ -26,8 +26,8 @@ namespace NightShiftExcelHelper {
             public string queryStr = "destAddress ==";
             public Condition condition = new Condition();
 
-            public string startTime;
-            public string endTime;
+            public string startTime = String.Format("{0:yyyy'-'MM'-'dd' 'HH':'00':'00}", DateTime.Now.AddDays(-1));
+            public string endTime = String.Format("{0:yyyy'-'MM'-'dd' 'HH':'mm':'ss}", DateTime.Now);
             public int from = 0;
             public int size = 5000;
             public int searchTypeNum = 3;
@@ -60,15 +60,15 @@ namespace NightShiftExcelHelper {
         }
 
         //风险资产数据结构
-        public class RAData {
-            //offset=0&limit=10&riskyType=fallen&orgId=&keyword=&date=2023-06-04
-            public int offset = 0;
-            public int limit = 10;
-            public string riskyType = "fallen";
-            public string orgId;
-            public string keyword;
-            public string date = String.Format("{0:yyyy'-'MM'-'dd}", DateTime.Now.AddDays(-1));
-        }
+        //public class RAData {
+        //    //offset=0&limit=10&riskyType=fallen&orgId=&keyword=&date=2023-06-04
+        //    public int offset = 0;
+        //    public int limit = 10;
+        //    //public string riskyType = "";
+        //    public string orgId = "";
+        //    public string keyword = "";
+        //    public string date = String.Format("{0:yyyy'-'MM'-'dd}", DateTime.Now.AddDays(-1));
+        //}
 
     }
 }
