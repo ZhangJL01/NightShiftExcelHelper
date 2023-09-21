@@ -8,71 +8,94 @@ using UnityEngine;
 
 namespace NightShiftExcelHelper {
     class ExcelHelper {
+        private static readonly string time = DateTime.Now.ToString("yyyyMMdd");
 
         //模板路径
-        private static readonly string rzoaSheet = 
-            Application.streamingAssetsPath + "/TemFiles/RZOA告警列表.xlsx";
-        private static readonly string erpSheet = 
-            Application.streamingAssetsPath + "/TemFiles/ERP告警列表.xlsx";
         private static readonly string nsSheet =
-            Application.streamingAssetsPath + "/TemFiles/信息安全网络安全监控报表.xlsx";
+            Application.streamingAssetsPath + "/TemFiles/信息网络安全监控报表.xlsx";
+
+        private static readonly string wpSheet =
+            Application.streamingAssetsPath + "/TemFiles/OA、ERP弱口令信息.xlsx";
+        
+        private static readonly string wpSheetNew =
+            Application.streamingAssetsPath + "/TemFiles/OA、ERP弱口令信息_NEW.xlsx";
+
+        private static readonly string wpDoc =
+            Application.streamingAssetsPath + "/TemFiles/弱口令截图.docx";
+
+        private static readonly string wpSheetDT =
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/OA、ERP弱口令信息_" + time + ".xlsx";
+
+        private static readonly string nsSheetDT =
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/信息网络安全监控报表_" + time + ".xlsx";
+
+        private static readonly string wpDocDT =
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/弱口令截图_" + time + ".docx";
 
         public static Dictionary<String, String> excelDic = new Dictionary<string, string>();
 
-        public static string time = String.Format("{0:'_'yyyyMMdd}", DateTime.Now);
-        private static readonly string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        public static string FillWPSheet(bool isOA) {
+        public static string FillWPSheet() {
             try {
-                string filePath;
-                List<ResponseData.WPData.WPInfo> wpInfos;
-                FileInfo newFile;
-                if (isOA) {
-                    filePath = rzoaSheet;
-                    wpInfos = NetHelper.rzoaList;
-                    newFile = new FileInfo(desktop + "/RZOA告警列表_" + time + ".xlsx");
-                } else {
-                    filePath = erpSheet;
-                    wpInfos = NetHelper.erpList;
-                    newFile = new FileInfo(desktop + "/ERP告警列表_" + time + ".xlsx");
-                }
-                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;    // 添加这行代码后不会报ExcelPackage错误
-                using (var p = new ExcelPackage()) { }
-                FileInfo existingFile = new FileInfo(filePath);
-                ExcelPackage package = new ExcelPackage(existingFile);
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.First();
+                // 添加这行代码后不会报ExcelPackage错误
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-                for (int i = 0; i < wpInfos.Count; i++) {
+                FileInfo fileInfo;
+                ExcelPackage package;
 
-                    worksheet.Cells[i + 2, 1].Value = wpInfos[i].srcAddress;
-                    worksheet.Cells[i + 2, 2].Value = wpInfos[i].destAddress;
-                    worksheet.Cells[i + 2, 3].Value = wpInfos[i].alarmName;
-                    worksheet.Cells[i + 2, 4].Value = wpInfos[i].subCategory;
-                    worksheet.Cells[i + 2, 5].Value = wpInfos[i].destPort;
-                    worksheet.Cells[i + 2, 6].Value = wpInfos[i].threatSeverity;
-                    worksheet.Cells[i + 2, 7].Value = wpInfos[i].alarmResults;
-                    worksheet.Cells[i + 2, 8].Value = wpInfos[i].collectorReceiptTime;
-                    worksheet.Cells[i + 2, 9].Value = wpInfos[i].srcUserName;
-                    worksheet.Cells[i + 2, 10].Value = wpInfos[i].passwd;
-                    worksheet.Cells[i + 2, 11].Value = wpInfos[i].testResult;
+                if (DateTime.Now.Day.Equals(1)) {
+                    fileInfo = new FileInfo(wpSheetNew);
+                    package = new ExcelPackage(fileInfo);
+
+                    package.SaveAs(fileInfo);
+                    package.Dispose();
                 }
 
-                package.SaveAs(newFile);
+                fileInfo = new FileInfo(wpSheet);
+                package = new ExcelPackage(fileInfo);
+
+                WPSheetHandle(package.Workbook.Worksheets.First(), NetHelper.rzoaList);
+                WPSheetHandle(package.Workbook.Worksheets.Last(), NetHelper.erpList);
+
+                package.Save();
+                fileInfo = new FileInfo(wpSheetDT);
+                package.SaveAs(fileInfo);
                 package.Dispose();
-                return rzoaSheet;
+                File.Copy(wpDoc, wpDocDT);
+
+                return null;
             } catch (Exception e) {
                 return e.Message;
             }
             
         }
 
+        private static void WPSheetHandle(ExcelWorksheet worksheet, List<ResponseData.WPData.WPInfo> list) {
+            int curRow = worksheet.Dimension.End.Row + 1;
+            worksheet.Cells["A" + curRow + ":A" + (curRow + list.Count - 1)].Merge = true;
+            worksheet.Cells[curRow, 1].Value = DateTime.Now.ToString("MM.dd");
+            list.ForEach(item => {
+                worksheet.Cells[curRow, 2].Value = item.srcAddress;
+                worksheet.Cells[curRow, 3].Value = item.destAddress;
+                worksheet.Cells[curRow, 4].Value = item.alarmName;
+                worksheet.Cells[curRow, 5].Value = item.subCategory;               
+                worksheet.Cells[curRow, 6].Value = item.destPort;
+                worksheet.Cells[curRow, 7].Value = item.threatSeverity;
+                worksheet.Cells[curRow, 8].Value = item.alarmResults;
+                worksheet.Cells[curRow, 9].Value = item.collectorReceiptTime;
+                worksheet.Cells[curRow, 10].Value = item.srcUserName;
+                worksheet.Cells[curRow, 11].Value = item.passwd;
+                curRow++;
+            });
+            
+        }
+
         public static void FillNSSheet() {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-            FileInfo newFile = new FileInfo(desktop + "/信息安全网络安全监控报表_" + time + ".xlsx");
+            FileInfo fileInfo = new FileInfo(nsSheet);
 
-            FileInfo existingFile = new FileInfo(nsSheet);
-            ExcelPackage package = new ExcelPackage(existingFile);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets.First();
+            ExcelPackage package = new ExcelPackage(fileInfo);
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(DateTime.Now.ToString("MM.dd") + "信息网络安全监控报表", package.Workbook.Worksheets.Last());
 
             //数量
             worksheet.Cells[4, 4].Value = NetHelper.highSIList.Count;
@@ -83,9 +106,14 @@ namespace NightShiftExcelHelper {
             worksheet.Cells[9, 4].Value = NetHelper.icNetList.Count;
             worksheet.Cells[10, 4].Value = NetHelper.otherNetList.Count;
 
-            worksheet.Cells[1, 1].Value +=
-                DateTime.Now.Month + "月" + (DateTime.Now.Day - 1) + "日-" 
-                + DateTime.Now.Month + "月" + DateTime.Now.Day + "日)";
+            worksheet.Cells[1, 1].Value = "信息网络安全监控报表(" +
+                DateTime.Now.Month + "月" + (DateTime.Now.Day - 1) + "日-" + DateTime.Now.Month + "月" + DateTime.Now.Day + "日)";
+            worksheet.Cells[2, 1].Value = "监控人员:        填表人员:";
+
+            for (int i = 4; i < 16; i++) {
+                worksheet.Cells[i, 6].Value = "";
+            }
+        
             //填写高危事件
             foreach (ResponseData.SIData.SIInfo siInfo in NetHelper.highSIList) {
 
@@ -156,7 +184,19 @@ namespace NightShiftExcelHelper {
 
             }
 
-            package.SaveAs(newFile);
+            package.Workbook.Worksheets.MoveToStart(worksheet.Name);
+            worksheet.View.SetTabSelected();
+
+            package.Save();
+
+            if (DateTime.Now.Day.Equals(1)) {
+                while(package.Workbook.Worksheets.Count > 1) {
+                    package.Workbook.Worksheets.Delete(1);
+                }
+                package.Save();
+            }
+            fileInfo = new FileInfo(nsSheetDT);
+            package.SaveAs(fileInfo);
             package.Dispose();
         }
 

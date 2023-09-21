@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using UnityEngine;
@@ -169,11 +170,14 @@ namespace NightShiftExcelHelper {
             //string returnXml = UnityWebRequest.EscapeURL(reader.ReadToEnd());//如果有编码问题就用这个方法
             string returnStr = reader.ReadToEnd();//利用StreamReader就可以从响应内容从头读到尾
             reader.Close();
+
+            List<ResponseData.WPData.WPInfo> temp = JsonConvert.DeserializeObject<ResponseData.WPData>(returnStr).data.data;
+
             if (destAdd == "10.200.24.11") {
-                rzoaList = JsonConvert.DeserializeObject<ResponseData.WPData>(returnStr).data.data;
+                rzoaList = temp;
             }
             else {
-                erpList = JsonConvert.DeserializeObject<ResponseData.WPData>(returnStr).data.data;
+                erpList = temp;
             }
             myResponse.Close();
         }
@@ -275,34 +279,47 @@ namespace NightShiftExcelHelper {
             HttpWebResponse myResponse;
             StreamReader reader;
 
+            Dictionary<string, string> filter = new Dictionary<string, string>();
+            List<ResponseData.WPData.WPInfo> temp = new List<ResponseData.WPData.WPInfo>();
+
             foreach (ResponseData.WPData.WPInfo wpInfo in erpList) {
-                a = erpUrl + "?username=" + wpInfo.srcUserName + "&password=" + wpInfo.passwd;
+                if (!wpInfo.srcAddress.Equals("10.201.37.12")) {
+                    if (filter.ContainsKey(wpInfo.srcUserName + wpInfo.passwd)) {
+                        continue;
+                    }
+                    a = erpUrl + "?username=" + wpInfo.srcUserName + "&password=" + wpInfo.passwd;
+                    //创建Web访问对象
+                    myRequest = (HttpWebRequest)WebRequest.Create(a);
 
-                //创建Web访问对象
-                myRequest = (HttpWebRequest)WebRequest.Create(a);
+                    myRequest.Method = "POST";
+                    myRequest.ContentType = "application/json";
+                    myRequest.Headers.Add("X-Service", "AuthenticateUser");
 
-                myRequest.Method = "POST";
-                myRequest.ContentType = "application/json";
-                myRequest.Headers.Add("X-Service", "AuthenticateUser");
+                    //获取接口返回值
+                    //通过Web访问对象获取响应内容
+                    myResponse = (HttpWebResponse)myRequest.GetResponse();
+                    //通过响应内容流创建StreamReader对象，因为StreamReader更高级更快
+                    reader = new StreamReader(myResponse.GetResponseStream(), Encoding.UTF8);
+                    //string returnXml = UnityWebRequest.EscapeURL(reader.ReadToEnd());//如果有编码问题就用这个方法
+                    returnXml = reader.ReadToEnd();//利用StreamReader就可以从响应内容从头读到尾
+                    reader.Close();
+                    myResponse.Close();
 
-                //获取接口返回值
-                //通过Web访问对象获取响应内容
-                myResponse = (HttpWebResponse)myRequest.GetResponse();
-                //通过响应内容流创建StreamReader对象，因为StreamReader更高级更快
-                reader = new StreamReader(myResponse.GetResponseStream(), Encoding.UTF8);
-                //string returnXml = UnityWebRequest.EscapeURL(reader.ReadToEnd());//如果有编码问题就用这个方法
-                returnXml = reader.ReadToEnd();//利用StreamReader就可以从响应内容从头读到尾
-                reader.Close();
-                myResponse.Close();
-                wpInfo.testResult = returnXml.Contains("status: 'success'") ? "成功" : "失败";
+                    if (returnXml.Contains("status: 'success'")) {
+                        temp.Add(wpInfo);
+                        filter.Add(wpInfo.srcUserName + wpInfo.passwd, wpInfo.passwd);
+                    }
+                }
+                
             }
-                       
+
+            erpList = temp;
+
         }
 
         public static void RzoaRequset() {
 
             string id, password, s, returnXml;
-            byte[] data;
 
             HttpWebRequest myRequest;
             CookieContainer cc;
@@ -310,44 +327,60 @@ namespace NightShiftExcelHelper {
             StreamReader reader;
             StreamWriter reqStream;
 
+            Dictionary<string, string> filter = new Dictionary<string, string>();
+            List<ResponseData.WPData.WPInfo> temp = new List<ResponseData.WPData.WPInfo>();
+
             foreach (ResponseData.WPData.WPInfo wpInfo in rzoaList) {
-                //创建Web访问对象
-                myRequest = (HttpWebRequest)WebRequest.Create(rzoaUrl);
-                cc = new CookieContainer();
+                if(!wpInfo.srcAddress.Equals("10.201.37.12")) {
+                    if (filter.ContainsKey(wpInfo.srcUserName + wpInfo.passwd)) {
+                        continue;
+                    }
+                    //创建Web访问对象
+                    myRequest = (HttpWebRequest)WebRequest.Create(rzoaUrl);
+                    cc = new CookieContainer();
 
-                id = UnityWebRequest.EscapeURL(wpInfo.srcUserName);
-                password = UnityWebRequest.EscapeURL(wpInfo.passwd);
+                    id = UnityWebRequest.EscapeURL(wpInfo.srcUserName);
+                    password = UnityWebRequest.EscapeURL(wpInfo.passwd);
 
-                cc.Add(new Cookie("myusername", id, "/", "rzoa.sdgt.com"));
-                cc.Add(new Cookie("indi_locale", "zh-cn", "/", ".sdgt.com"));
-                myRequest.Method = "POST";
-                myRequest.ContentType = "application/x-www-form-urlencoded";
-                myRequest.AllowAutoRedirect = true;
+                    cc.Add(new Cookie("myusername", id, "/", "rzoa.sdgt.com"));
+                    cc.Add(new Cookie("indi_locale", "zh-cn", "/", ".sdgt.com"));
+                    myRequest.Method = "POST";
+                    myRequest.ContentType = "application/x-www-form-urlencoded";
+                    myRequest.AllowAutoRedirect = true;
 
-                myRequest.CookieContainer = cc;
-                //把用户数据转成“UTF-8”的字节流
-                #region 添加Post 参数
-                
-                s = "Username=" + id + "&Password=" + password;
-                data = Encoding.Default.GetBytes(UnityWebRequest.EscapeURL(s));
-                myRequest.ContentLength = s.Length;
-                using (reqStream = new StreamWriter(myRequest.GetRequestStream())) {
-                    reqStream.Write(s);
-                    reqStream.Close();
+                    myRequest.CookieContainer = cc;
+                    //把用户数据转成“UTF-8”的字节流
+                    #region 添加Post 参数
+
+                    s = "Username=" + id + "&Password=" + password;
+
+                    myRequest.ContentLength = s.Length;
+                    using (reqStream = new StreamWriter(myRequest.GetRequestStream())) {
+                        reqStream.Write(s);
+                        reqStream.Close();
+                    }
+                    #endregion
+
+                    //获取接口返回值
+                    //通过Web访问对象获取响应内容
+                    myResponse = (HttpWebResponse)myRequest.GetResponse();
+                    //通过响应内容流创建StreamReader对象，因为StreamReader更高级更快
+                    reader = new StreamReader(myResponse.GetResponseStream(), Encoding.GetEncoding("GB2312"));
+                    //string returnXml = UnityWebRequest.EscapeURL(reader.ReadToEnd());//如果有编码问题就用这个方法
+                    returnXml = reader.ReadToEnd();//利用StreamReader就可以从响应内容从头读到尾
+                    reader.Close();
+                    myResponse.Close();
+
+                    if (returnXml.Contains("<title>办公自动化系统</title>") 
+                        || Regex.IsMatch(wpInfo.srcUserName, @"[\u4e00-\u9fa5]")) {
+                        temp.Add(wpInfo);
+                        filter.Add(wpInfo.srcUserName + wpInfo.passwd, wpInfo.passwd);
+                    }  
                 }
-                #endregion
-
-                //获取接口返回值
-                //通过Web访问对象获取响应内容
-                myResponse = (HttpWebResponse)myRequest.GetResponse();
-                //通过响应内容流创建StreamReader对象，因为StreamReader更高级更快
-                reader = new StreamReader(myResponse.GetResponseStream(), Encoding.GetEncoding("GB2312"));
-                //string returnXml = UnityWebRequest.EscapeURL(reader.ReadToEnd());//如果有编码问题就用这个方法
-                returnXml = reader.ReadToEnd();//利用StreamReader就可以从响应内容从头读到尾
-                reader.Close();
-                myResponse.Close();
-                wpInfo.testResult = returnXml.Contains("<title>办公自动化系统</title>") ? "成功" : "失败";
+                
             }
+
+            rzoaList = temp;
             
         }
 
