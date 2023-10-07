@@ -22,10 +22,9 @@ public class SysCtrl : MonoBehaviour
     private void Awake() {
         try {
             StartCoroutine(GetCode());
-            Debug.Log(DateTime.Now.Day);
             loadBtn.onClick.AddListener(() => {
                 StartCoroutine(Check());
-                });
+            });
 
         } catch (Exception e) {
             //EditorUtility.DisplayDialog("?...", e.Message, "确定");
@@ -153,13 +152,13 @@ public class SysCtrl : MonoBehaviour
         yield return null;
         NetHelper.GetRAList();
 
-        //msgTxt.text = "弱口令信息测试中：RZOA";
-        //yield return null;
-        //NetHelper.RzoaRequset();
+        msgTxt.text = "弱口令信息测试中：RZOA";
+        yield return null;
+        NetHelper.RzoaRequset();
 
-        //msgTxt.text = "弱口令信息测试中：ERP";
-        //yield return null;
-        //NetHelper.ErpRequset();
+        msgTxt.text = "弱口令信息测试中：ERP";
+        yield return null;
+        NetHelper.ErpRequset();
 
         NetHelper.Test();
         msgTxt.text = "信息安全相关网站测试中";

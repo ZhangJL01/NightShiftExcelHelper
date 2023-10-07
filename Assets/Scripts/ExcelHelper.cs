@@ -11,10 +11,10 @@ namespace NightShiftExcelHelper {
         private static readonly string time = DateTime.Now.ToString("yyyyMMdd");
 
         //模板路径
-        private static readonly string nsSheet =
+        public static readonly string nsSheet =
             Application.streamingAssetsPath + "/TemFiles/信息网络安全监控报表.xlsx";
 
-        private static readonly string wpSheet =
+        public static readonly string wpSheet =
             Application.streamingAssetsPath + "/TemFiles/OA、ERP弱口令信息.xlsx";
         
         private static readonly string wpSheetNew =
@@ -46,7 +46,7 @@ namespace NightShiftExcelHelper {
                     fileInfo = new FileInfo(wpSheetNew);
                     package = new ExcelPackage(fileInfo);
 
-                    package.SaveAs(fileInfo);
+                    package.SaveAs(wpSheet);
                     package.Dispose();
                 }
 
@@ -66,11 +66,14 @@ namespace NightShiftExcelHelper {
             } catch (Exception e) {
                 return e.Message;
             }
-            
         }
 
         private static void WPSheetHandle(ExcelWorksheet worksheet, List<ResponseData.WPData.WPInfo> list) {
             int curRow = worksheet.Dimension.End.Row + 1;
+            if (list.Count == 0) {
+                worksheet.Cells[curRow, 1].Value = "空";
+                return;
+            }
             worksheet.Cells["A" + curRow + ":A" + (curRow + list.Count - 1)].Merge = true;
             worksheet.Cells[curRow, 1].Value = DateTime.Now.ToString("MM.dd");
             list.ForEach(item => {
@@ -111,6 +114,7 @@ namespace NightShiftExcelHelper {
             worksheet.Cells[2, 1].Value = "监控人员:        填表人员:";
 
             for (int i = 4; i < 16; i++) {
+                worksheet.Cells[i, 5].Value = "";
                 worksheet.Cells[i, 6].Value = "";
             }
         
